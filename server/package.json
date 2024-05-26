@@ -1,0 +1,44 @@
+{
+  "name": "neptune-backend",
+  "version": "1.0.0",
+  "description": "neptune backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "NODE_ENV=test npx mocha test --config .mocharc.js",
+    "prisma_migrate": "npx dotenv -e .env.test npx prisma migrate dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "temp"
+  },
+  "author": "pagewang",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@prisma/client": "^5.13.0",
+    "axios": "^1.6.8",
+    "axiosist": "github:pagewang0/axiosist",
+    "bluebird": "^3.7.2",
+    "faker": "^5.5.3",
+    "joi": "^17.13.1",
+    "jsonwebtoken": "^9.0.2",
+    "koa": "^2.15.3",
+    "koa-body": "^4.2.0",
+    "koa-jwt": "^4.0.4",
+    "koa-router": "^12.0.1",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.10",
+    "chai": "^4.4.1",
+    "dotenv-cli": "^7.4.1",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-mocha": "^10.4.3",
+    "mocha": "^9.2.2",
+    "nyc": "^15.1.0",
+    "prisma": "^5.13.0",
+    "supertest": "^7.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
