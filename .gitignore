@@ -24,6 +24,5 @@ pnpm-debug.log*
 
 coverage
 
-prisma/*.db
-prisma/*.db*
-prisma/migrations
+server/prisma/*.db*
+server/prisma/migrations
