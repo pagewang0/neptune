@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "temp"
+    "url": "git@github.com:pagewang0/neptune.git"
   },
   "author": "pagewang",
   "dependencies": {

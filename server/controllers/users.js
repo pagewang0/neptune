@@ -18,6 +18,12 @@ exports.register = async (ctx) => {
 
   const token = await proxy.users.register({ name, email, password });
 
+  ctx.cookies.set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 3600000 * 24,
+  });
+
   ctx.status = 201;
   ctx.body = { token };
 };
@@ -36,6 +42,12 @@ exports.login = async (ctx) => {
   }
 
   const token = await proxy.users.login({ email, password });
+
+  ctx.cookies.set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 3600000 * 24,
+  });
 
   ctx.body = { token };
 };
