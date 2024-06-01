@@ -14,8 +14,24 @@ describe('controllers users', () => {
   const fields = ['name', 'email'];
   const { request } = common;
 
-  it('register 201', async () => {
-    const res = await request.post('/register', payload);
+  before(async () => {
+    await models.user.create({
+      data: {
+        name: 'page',
+        email: 'test@test.com',
+        password: 'dadada',
+        salt: 'salt',
+      },
+    });
+  });
+
+  it.only('register 201', async () => {
+    // const res = await request.post('/register', payload);
+    const res = await request.post('/register', {
+      name: 'test',
+      email: 'test@test.com',
+      password: 'dadada',
+    });
 
     assert.equal(201, res.status);
 

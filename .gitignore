@@ -26,3 +26,4 @@ coverage
 
 server/prisma/*.db*
 server/prisma/migrations
+prisma*

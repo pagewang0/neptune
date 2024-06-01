@@ -14,7 +14,6 @@
   "author": "pagewang",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@prisma/client": "^5.13.0",
     "axios": "^1.6.8",
     "axiosist": "github:pagewang0/axiosist",
     "bluebird": "^3.7.2",

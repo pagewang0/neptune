@@ -1,14 +1,11 @@
 const joi = require('joi');
 const proxy = require('../proxy');
+const common = require('../../common');
 
 exports.register = async (ctx) => {
   const { name, email, password } = ctx.request.body;
 
-  const schema = joi.object({
-    name: joi.string().required().max(48),
-    password: joi.string().required().min(4).max(48),
-    email: joi.string().email().required(),
-  });
+  const schema = joi.object(common.joi.register(joi));
 
   try {
     await schema.validateAsync({ name, email, password });
@@ -38,7 +35,7 @@ exports.login = async (ctx) => {
   try {
     await schema.validateAsync({ email, password });
   } catch (error) {
-    ctx.throw(400, 'email or password is not correct');
+    ctx.throw(401, 'email or password is not correct');
   }
 
   const token = await proxy.users.login({ email, password });

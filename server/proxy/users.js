@@ -1,4 +1,5 @@
 const Boom = require('@hapi/boom');
+// const Promise = require('bluebird');
 
 const utils = require('../utils');
 const config = require('../config');
@@ -22,12 +23,13 @@ exports.get_token = async (id, expire) => {
 
 exports.register = async ({ name, email, password }) => {
   const newUser = await models.$transaction(async (tx) => {
-    const user = await tx.user.findFirst({
-      where: { OR: [{ name }, { email }] },
-      select: { id: true },
-    });
-
-    if (user) {
+    const res = await Promise.all([
+      tx.user.findUnique({ where: { name } }),
+      // tx.$queryRaw`SELECT id FROM User where name=${name}`.then((d) => !d[0] && null),
+      tx.user.findUnique({ where: { email } }),
+    ]);
+    console.log(res);
+    if (res.some((d) => d)) {
       throw Boom.badRequest('username or email exists');
     }
 
