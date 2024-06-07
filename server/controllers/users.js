@@ -1,36 +1,26 @@
-const joi = require('joi');
 const proxy = require('../proxy');
-const common = require('../../common');
+const config = require('../config');
+const { joi } = require('../../common');
 
 exports.register = async (ctx) => {
   const { name, email, password } = ctx.request.body;
 
-  const schema = joi.object(common.joi.register(joi));
-
+  const schema = joi.register();
   try {
     await schema.validateAsync({ name, email, password });
   } catch (error) {
     ctx.throw(400, 'resgister input check fail');
   }
 
-  const token = await proxy.users.register({ name, email, password });
-
-  ctx.cookies.set('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 3600000 * 24,
-  });
+  await proxy.users.register({ name, email, password });
 
   ctx.status = 201;
-  ctx.body = { token };
 };
 
 exports.login = async (ctx) => {
   const { email, password } = ctx.request.body;
-  const schema = joi.object({
-    email: joi.string().email().required(),
-    password: joi.string().required().min(4).max(48),
-  });
+
+  const schema = joi.login();
 
   try {
     await schema.validateAsync({ email, password });
@@ -40,13 +30,9 @@ exports.login = async (ctx) => {
 
   const token = await proxy.users.login({ email, password });
 
-  ctx.cookies.set('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 3600000 * 24,
-  });
+  ctx.cookies.set(config.cookie.key, token, config.cookie.options);
 
-  ctx.body = { token };
+  ctx.status = 200;
 };
 
 exports.me = async (ctx) => {
@@ -58,9 +44,7 @@ exports.me = async (ctx) => {
 exports.read = async (ctx) => {
   const { userId } = ctx.query;
 
-  const schema = joi.object({
-    userId: joi.number().integer().required(),
-  });
+  const schema = joi.userId();
 
   try {
     await schema.validateAsync({ userId });

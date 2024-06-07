@@ -14,34 +14,14 @@ describe('controllers users', () => {
   const fields = ['name', 'email'];
   const { request } = common;
 
-  before(async () => {
-    await models.user.create({
-      data: {
-        name: 'page',
-        email: 'test@test.com',
-        password: 'dadada',
-        salt: 'salt',
-      },
-    });
-  });
+  it('register 201', async () => {
+    const res = await request.post('/register', payload);
 
-  it.only('register 201', async () => {
-    // const res = await request.post('/register', payload);
-    const res = await request.post('/register', {
-      name: 'test',
-      email: 'test@test.com',
-      password: 'dadada',
-    });
+    assert(201, res.status);
 
-    assert.equal(201, res.status);
-
-    const { id: userId } = await utils.jwt_verify(res.data.token, config.jwt.secret);
-
-    const user = await models.user.findUnique({ where: { id: userId } });
+    const user = await models.user.findUnique({ where: { name: payload.name } });
 
     assert.deepEqual(_.pick(user, fields), _.pick(user, fields));
-
-    payload.userId = userId;
   });
 
   it('register 400', async () => {
@@ -55,9 +35,14 @@ describe('controllers users', () => {
     const res = await request.post('/login', _.pick(payload, ['email', 'password']));
 
     assert.equal(200, res.status);
-    assert.isString(res.data.token);
 
-    payload.token = res.data.token;
+    const [, token] = res.headers['set-cookie'][0].match(/token=([^;]+);/);
+
+    const { id: userId } = await utils.jwt_verify(token, config.jwt.secret);
+
+    await models.user.findFirstOrThrow({ where: { id: userId } });
+
+    _.extend(payload, { userId, token });
   });
 
   it('login 401', async () => {

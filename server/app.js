@@ -22,7 +22,7 @@ app.use(middleware.error_handle());
 
 app.use(jwt({
   secret: config.jwt.secret,
-  getToken: (ctx) => ctx.header.authsessiontoken,
+  cookie: 'token',
 })
   .unless({ path: [...config.jwt.unless] }));
 

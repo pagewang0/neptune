@@ -1,6 +1,7 @@
 const axiosist = require('axiosist');
 
 const app = require('../app');
+const config = require('../config');
 
 const server = app.listen();
 
@@ -14,7 +15,7 @@ let getToken = null; // this is hell in parallel mode
 
 request.interceptors.request.use((opts) => {
   if (getToken) {
-    opts.headers.authsessiontoken = getToken();
+    opts.headers.Cookie = `${config.cookie.key}=${getToken()};`;
   }
 
   return opts;

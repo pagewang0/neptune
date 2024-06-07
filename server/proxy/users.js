@@ -23,13 +23,12 @@ exports.get_token = async (id, expire) => {
 
 exports.register = async ({ name, email, password }) => {
   const newUser = await models.$transaction(async (tx) => {
-    const res = await Promise.all([
-      tx.user.findUnique({ where: { name } }),
-      // tx.$queryRaw`SELECT id FROM User where name=${name}`.then((d) => !d[0] && null),
-      tx.user.findUnique({ where: { email } }),
-    ]);
-    console.log(res);
-    if (res.some((d) => d)) {
+    const res = await tx.user.findFirst({
+      where: { OR: [{ name }, { email }] },
+      select: { id: true },
+    });
+
+    if (res) {
       throw Boom.badRequest('username or email exists');
     }
 

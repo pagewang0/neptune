@@ -7,6 +7,14 @@ module.exports = {
       '/login',
     ],
   },
+  cookie: {
+    key: 'token',
+    options: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000 * 24,
+    },
+  },
   db: {
     url: 'file:./dev.db',
   },
